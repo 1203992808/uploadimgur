@@ -504,7 +504,7 @@ export default function Home() {
             </div>
             <div className="pt-6 border-t border-gray-200">
               <p className="text-sm sm:text-base text-gray-500">
-                © 2024 ImgurUpload.pro - Free Imgur Upload Tool. Not affiliated with Imgur, Inc.
+                © 2025 ImgurUpload.pro - Free Imgur Upload Tool. Not affiliated with Imgur, Inc.
               </p>
             </div>
           </div>

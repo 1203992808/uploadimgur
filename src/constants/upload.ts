@@ -30,7 +30,8 @@ export const LINK_FORMATS = [
   { id: 'direct', label: 'Direct Link', format: '{url}' },
   { id: 'markdown', label: 'Markdown', format: '![image]({url})' },
   { id: 'html', label: 'HTML', format: '<img src="{url}" alt="image" />' },
-  { id: 'bbcode', label: 'BBCode', format: '[img]{url}[/img]' }
+  { id: 'bbcode', label: 'BBCode', format: '[img]{url}[/img]' },
+  { id: 'qrcode', label: 'QR Code', format: 'qr:{url}' }
 ] as const;
 
 export const API_ENDPOINTS = {

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Check, X, Copy, ExternalLink, Trash2 } from 'lucide-react';
+import { Check, X, Copy, ExternalLink, Trash2, Download } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -53,10 +53,34 @@ export function UploadItem({ uploadFile, onRemove, onRetry }: UploadItemProps) {
     }
   };
 
+  const handleDownloadQR = async () => {
+    if (!uploadFile.result?.url) return;
+    
+    try {
+      const qrCodeUrl = getLinkByFormat('qrcode');
+      const response = await fetch(qrCodeUrl);
+      const blob = await response.blob();
+      
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = `qrcode-${uploadFile.file.name}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(downloadUrl);
+    } catch (error) {
+      console.error('Failed to download QR code:', error);
+    }
+  };
+
   const getLinkByFormat = (formatId: string) => {
     if (!uploadFile.result?.url) return '';
     
     const format = LINK_FORMATS.find(f => f.id === formatId);
+    if (formatId === 'qrcode') {
+      return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(uploadFile.result.url)}`;
+    }
     return format ? format.format.replace('{url}', uploadFile.result.url) : uploadFile.result.url;
   };
 
@@ -150,34 +174,57 @@ export function UploadItem({ uploadFile, onRemove, onRetry }: UploadItemProps) {
                 </div>
 
                 {/* Link Display */}
-                <div className="flex items-center space-x-2">
-                  <div className="flex-1 min-w-0">
-                    <input
-                      type="text"
-                      value={getLinkByFormat(selectedFormat)}
-                      readOnly
-                      className="w-full px-2 py-1 text-xs bg-gray-50 border rounded font-mono"
+                {selectedFormat === 'qrcode' ? (
+                  <div className="flex flex-col items-center space-y-2">
+                    <img
+                      src={getLinkByFormat(selectedFormat)}
+                      alt="QR Code"
+                      className="w-32 h-32 border rounded"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI4IiBoZWlnaHQ9IjEyOCIgdmlld0JveD0iMCAwIDEyOCAxMjgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiBmaWxsPSIjRjNGNEY2Ii8+Cjx0ZXh0IHg9IjY0IiB5PSI2NCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgZmlsbD0iIzlDQTNBRiIgZm9udC1zaXplPSIxNCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiPkVycm9yPC90ZXh0Pgo8L3N2Zz4K';
+                      }}
                     />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleDownloadQR}
+                      className="flex items-center space-x-2"
+                    >
+                      <Download className="w-4 h-4" />
+                      <span>Download QR Code</span>
+                    </Button>
                   </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleCopy(getLinkByFormat(selectedFormat), selectedFormat)}
-                  >
-                    {copySuccess === selectedFormat ? (
-                      <Check className="w-4 h-4 text-green-600" />
-                    ) : (
-                      <Copy className="w-4 h-4" />
-                    )}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => window.open(uploadFile.result!.url, '_blank')}
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                  </Button>
-                </div>
+                ) : (
+                  <div className="flex items-center space-x-2">
+                    <div className="flex-1 min-w-0">
+                      <input
+                        type="text"
+                        value={getLinkByFormat(selectedFormat)}
+                        readOnly
+                        className="w-full px-2 py-1 text-xs bg-gray-50 border rounded font-mono"
+                      />
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleCopy(getLinkByFormat(selectedFormat), selectedFormat)}
+                    >
+                      {copySuccess === selectedFormat ? (
+                        <Check className="w-4 h-4 text-green-600" />
+                      ) : (
+                        <Copy className="w-4 h-4" />
+                      )}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => window.open(uploadFile.result!.url, '_blank')}
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                    </Button>
+                  </div>
+                )}
 
                 {/* Quick Actions */}
                 <div className="flex flex-wrap gap-2">
