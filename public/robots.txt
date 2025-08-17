@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://imgurupload.pro/sitemap.xml
+
+# Block certain paths if needed (none currently)
+# Disallow: /admin/
+# Disallow: /private/
