@@ -51,7 +51,7 @@ export class UploadAPI {
               error: `Upload failed with status ${xhr.status}`
             });
           }
-        } catch (error) {
+        } catch {
           resolve({
             success: false,
             error: 'Failed to parse response'

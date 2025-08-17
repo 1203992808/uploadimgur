@@ -52,7 +52,7 @@ export function useUpload() {
           status: 'pending',
           progress: 0
         });
-      } catch (error) {
+      } catch {
         newUploadFiles.push({
           id: generateId(),
           file,

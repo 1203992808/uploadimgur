@@ -358,7 +358,7 @@ export default function Home() {
                 <Card className="bg-white/70 backdrop-blur-sm border-gray-200 shadow-lg rounded-2xl p-8">
                   <h3 className="text-xl font-bold text-gray-900 mb-4">Optimized Reddit Imgur Upload Integration</h3>
                   <p className="text-gray-600 leading-relaxed mb-4">
-                    Transform your Reddit posting experience with our specialized imgur upload technology. Generate instant imgur image upload links that integrate flawlessly with Reddit's embedding system for maximum engagement.
+                    Transform your Reddit posting experience with our specialized imgur upload technology. Generate instant imgur image upload links that integrate flawlessly with Reddit&apos;s embedding system for maximum engagement.
                   </p>
                   <ul className="space-y-2 text-sm text-gray-600">
                     <li>• Lightning-fast direct links for Reddit imgur upload</li>
@@ -429,9 +429,9 @@ export default function Home() {
                 </Card>
 
                 <Card className="bg-white/70 backdrop-blur-sm border-gray-200 shadow-lg rounded-2xl p-8">
-                  <h3 className="text-lg font-bold text-gray-900 mb-3">What's the lifespan of my imgur upload content?</h3>
+                  <h3 className="text-lg font-bold text-gray-900 mb-3">What&apos;s the lifespan of my imgur upload content?</h3>
                   <p className="text-gray-600 leading-relaxed">
-                    Your imgur image upload content remains permanently hosted on Imgur's robust infrastructure. Our imgur upload service ensures long-term accessibility, with images maintained indefinitely unless they violate platform policies or remain inactive for extended periods.
+                    Your imgur image upload content remains permanently hosted on Imgur&apos;s robust infrastructure. Our imgur upload service ensures long-term accessibility, with images maintained indefinitely unless they violate platform policies or remain inactive for extended periods.
                   </p>
                 </Card>
 
@@ -452,7 +452,7 @@ export default function Home() {
                 <Card className="bg-white/70 backdrop-blur-sm border-gray-200 shadow-lg rounded-2xl p-8">
                   <h3 className="text-lg font-bold text-gray-900 mb-3">What privacy levels does imgur upload provide?</h3>
                   <p className="text-gray-600 leading-relaxed">
-                    Our imgur image upload service automatically sets images as "hidden" within Imgur's infrastructure, ensuring they remain invisible in public galleries and search indexes. While direct imgur upload links provide access, your content stays private from general discovery.
+                    Our imgur image upload service automatically sets images as &quot;hidden&quot; within Imgur&apos;s infrastructure, ensuring they remain invisible in public galleries and search indexes. While direct imgur upload links provide access, your content stays private from general discovery.
                   </p>
                 </Card>
 
