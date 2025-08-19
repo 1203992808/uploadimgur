@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { Upload, History, Trash2, Image as ImageIcon } from 'lucide-react';
+import Link from 'next/link';
+import { Upload, History, Trash2, Image as ImageIcon, BookOpen } from 'lucide-react';
 import { UploadArea } from '@/components/upload/upload-area';
 import { UploadItem } from '@/components/upload/upload-item';
 import { Button } from '@/components/ui/button';
@@ -87,16 +88,28 @@ export default function Home() {
                 ImgurUpload
               </div>
             </div>
-            <Button
-              variant="ghost"
-              onClick={handleHistoryToggle}
-              className="text-gray-600 hover:text-gray-900 hover:bg-gray-50/80 rounded-full transition-all duration-200 hover:shadow-md"
-              size="sm"
-            >
-              <History className="w-4 h-4 sm:w-5 sm:h-5 sm:mr-2" />
-              <span className="hidden sm:inline">History ({history.length})</span>
-              <span className="sm:hidden">({history.length})</span>
-            </Button>
+            <div className="flex items-center space-x-4">
+              <Link href="/blog">
+                <Button
+                  variant="ghost"
+                  className="text-gray-600 hover:text-gray-900 hover:bg-gray-50/80 rounded-full transition-all duration-200 hover:shadow-md"
+                  size="sm"
+                >
+                  <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 sm:mr-2" />
+                  <span className="hidden sm:inline">Blog</span>
+                </Button>
+              </Link>
+              <Button
+                variant="ghost"
+                onClick={handleHistoryToggle}
+                className="text-gray-600 hover:text-gray-900 hover:bg-gray-50/80 rounded-full transition-all duration-200 hover:shadow-md"
+                size="sm"
+              >
+                <History className="w-4 h-4 sm:w-5 sm:h-5 sm:mr-2" />
+                <span className="hidden sm:inline">History ({history.length})</span>
+                <span className="sm:hidden">({history.length})</span>
+              </Button>
+            </div>
           </div>
         </div>
       </header>
