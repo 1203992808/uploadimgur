@@ -86,7 +86,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   // Convert markdown content to HTML (basic conversion for demonstration)
   const formatContent = (content: string) => {
-    let processedContent = content
+    // Remove the first line if it's an h1 title (since we display the title separately)
+    let processedContent = content.replace(/^# .*$/m, '').trim();
+    
+    processedContent = processedContent
       .replace(/^# (.*$)/gm, '<h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 leading-tight">$1</h1>')
       .replace(/^## (.*$)/gm, '<h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mt-12 mb-6 leading-tight">$1</h2>')
       .replace(/^### (.*$)/gm, '<h3 class="text-xl sm:text-2xl font-bold text-gray-900 mt-8 mb-4 leading-tight">$1</h3>')
