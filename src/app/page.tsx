@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { Upload, History, Trash2, Image as ImageIcon, BookOpen } from 'lucide-react';
 import { UploadArea } from '@/components/upload/upload-area';
 import { UploadItem } from '@/components/upload/upload-item';
+import { UploadControls } from '@/components/upload/upload-controls';
+import { HistoryManager } from '@/lib/storage/history';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useUpload } from '@/hooks/use-upload';
@@ -29,10 +31,26 @@ export default function Home() {
   const [showHistory, setShowHistory] = useState(false);
   const historyRef = useRef<HTMLDivElement>(null);
   const uploadControlsRef = useRef<HTMLDivElement>(null);
-  const uploadAllRef = useRef<HTMLDivElement>(null);
+  const [storageWarning, setStorageWarning] = useState<string | null>(null);
 
   useEffect(() => {
     loadHistory();
+    
+    // 检查存储空间使用情况
+    const checkStorageUsage = () => {
+      const storageInfo = HistoryManager.getStorageInfo();
+      if (storageInfo.percentage > 80) {
+        setStorageWarning(`Storage usage: ${Math.round(storageInfo.percentage)}%. Consider clearing history to free up space.`);
+      } else {
+        setStorageWarning(null);
+      }
+    };
+    
+    checkStorageUsage();
+    // 定期检查存储使用情况
+    const interval = setInterval(checkStorageUsage, 30000); // 每30秒检查一次
+    
+    return () => clearInterval(interval);
   }, [loadHistory]);
 
   const handleHistoryToggle = () => {
@@ -50,9 +68,9 @@ export default function Home() {
 
   const handleFilesSelect = async (files: File[]) => {
     await addFiles(files);
-    // 自动滚动到Upload All按钮区域，居中显示
+    // 自动滚动到操作区域，居中显示
     setTimeout(() => {
-      uploadAllRef.current?.scrollIntoView({ 
+      uploadControlsRef.current?.scrollIntoView({ 
         behavior: 'smooth',
         block: 'center'
       });
@@ -61,9 +79,9 @@ export default function Home() {
 
   const handleUrlSubmit = async (url: string) => {
     await addFromUrl(url);
-    // 自动滚动到Upload All按钮区域，居中显示
+    // 自动滚动到操作区域，居中显示
     setTimeout(() => {
-      uploadAllRef.current?.scrollIntoView({ 
+      uploadControlsRef.current?.scrollIntoView({ 
         behavior: 'smooth',
         block: 'center'
       });
@@ -116,6 +134,32 @@ export default function Home() {
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         <div className="space-y-8 sm:space-y-12">
+          {/* Storage Warning */}
+          {storageWarning && (
+            <Card className="bg-yellow-50 border-yellow-200 shadow-lg rounded-2xl">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
+                      <History className="w-4 h-4 text-yellow-600" />
+                    </div>
+                    <p className="text-sm text-yellow-800">{storageWarning}</p>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      clearHistory();
+                      setStorageWarning(null);
+                    }}
+                    className="text-yellow-700 border-yellow-300 hover:bg-yellow-100"
+                  >
+                    Clear History
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
           {/* Hero Section */}
           <div className="text-center space-y-4 sm:space-y-6">
             <div className="inline-flex items-center px-4 py-2 bg-blue-50 text-blue-700 rounded-full text-sm font-medium mb-4">
@@ -138,85 +182,18 @@ export default function Home() {
             </CardContent>
           </Card>
 
-          {/* Upload All Button Section */}
-          {uploadFiles.length > 0 && pendingCount > 0 && (
-            <div className="flex justify-center" ref={uploadAllRef}>
-              <Card className="bg-white/90 backdrop-blur-sm border-gray-200 shadow-lg rounded-2xl hover:shadow-xl transition-all duration-300">
-                <CardContent className="p-6 pt-5">
-                  <div className="flex items-center justify-center gap-4 ">
-                    <Button
-                      onClick={uploadAll}
-                      disabled={isUploading}
-                      className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-8 py-4 text-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
-                      size="lg"
-                    >
-                      <Upload className="w-6 h-6 mr-3" />
-                      Upload All ({pendingCount} files)
-                    </Button>
-                    <Button
-                      onClick={clearAll}
-                      disabled={isUploading}
-                      variant="outline"
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-300 hover:border-red-400 rounded-xl px-6 py-4 transition-all duration-300"
-                      size="lg"
-                    >
-                      <Trash2 className="w-5 h-5 mr-2" />
-                      Clear All
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          )}
-
-          {/* Upload Controls */}
+          {/* Upload Controls - 合并了上传控制和链接管理 */}
           {uploadFiles.length > 0 && (
-            <Card className="bg-white/80 backdrop-blur-sm border-gray-200 shadow-lg rounded-2xl" ref={uploadControlsRef}>
-              <CardContent className="p-4 sm:p-6">
-                <div className="flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-                    <span className="text-sm font-medium text-gray-700">
-                      {uploadFiles.length} files
-                    </span>
-                    {pendingCount > 0 && (
-                      <span className="text-sm text-orange-600">
-                        {pendingCount} pending
-                      </span>
-                    )}
-                    {successCount > 0 && (
-                      <span className="text-sm text-green-600">
-                        {successCount} uploaded
-                      </span>
-                    )}
-                    {errorCount > 0 && (
-                      <span className="text-sm text-red-600">
-                        {errorCount} failed
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex items-center space-x-2 sm:space-x-3">
-                    {successCount > 0 && (
-                      <Button
-                        variant="ghost"
-                        onClick={clearCompleted}
-                        className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-full hidden sm:inline-flex"
-                        size="sm"
-                      >
-                        Clear Completed
-                      </Button>
-                    )}
-                    <Button
-                      variant="ghost"
-                      onClick={clearAll}
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50 rounded-full"
-                      size="sm"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <div ref={uploadControlsRef}>
+              <UploadControls
+                uploadFiles={uploadFiles}
+                onUploadAll={uploadAll}
+                onClearCompleted={clearCompleted}
+                onClearAll={clearAll}
+                isUploading={isUploading}
+                className="bg-white/80 backdrop-blur-sm border-gray-200 shadow-lg rounded-2xl"
+              />
+            </div>
           )}
 
           {/* Upload Items */}

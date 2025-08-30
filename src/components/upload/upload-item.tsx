@@ -16,7 +16,7 @@ interface UploadItemProps {
 }
 
 export function UploadItem({ uploadFile, onRemove, onRetry }: UploadItemProps) {
-  const [selectedFormat, setSelectedFormat] = useState<typeof LINK_FORMATS[number]['id']>(LINK_FORMATS[0].id);
+  const [selectedFormat, setSelectedFormat] = useState<string>(LINK_FORMATS[0].id);
   const [copySuccess, setCopySuccess] = useState<string | null>(null);
 
   const getStatusColor = (status: UploadFile['status']) => {

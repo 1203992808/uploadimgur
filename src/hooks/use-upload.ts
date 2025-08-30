@@ -105,7 +105,7 @@ export function useUpload() {
           result: result.data
         });
 
-        // Add to history
+        // Add to history - 处理存储错误
         const historyItem: UploadHistory = {
           id: uploadFile.id,
           filename: uploadFile.file.name,
@@ -116,8 +116,15 @@ export function useUpload() {
           thumbnail: uploadFile.preview
         };
 
-        HistoryManager.addItem(historyItem);
-        setHistory(prev => [historyItem, ...prev]);
+        try {
+          HistoryManager.addItem(historyItem);
+          // 重新加载历史记录以确保状态同步
+          const updatedHistory = HistoryManager.getHistory();
+          setHistory(updatedHistory);
+        } catch (error) {
+          console.warn('Failed to save upload history, but upload was successful:', error);
+          // 即使历史记录保存失败，上传仍然成功
+        }
 
         return result.data;
       } else {

@@ -27,11 +27,23 @@ export const SUPPORTED_FORMATS = [
 ] as const;
 
 export const LINK_FORMATS = [
-  { id: 'direct', label: 'Direct Link', format: '{url}' },
-  { id: 'markdown', label: 'Markdown', format: '![image]({url})' },
-  { id: 'html', label: 'HTML', format: '<img src="{url}" alt="image" />' },
-  { id: 'bbcode', label: 'BBCode', format: '[img]{url}[/img]' },
-  { id: 'qrcode', label: 'QR Code', format: 'qr:{url}' }
+  { id: 'direct', label: 'Direct Link', format: '{url}', description: 'Direct image link' },
+  { id: 'markdown', label: 'Markdown', format: '![image]({url})', description: 'For GitHub, Reddit' },
+  { id: 'html', label: 'HTML', format: '<img src="{url}" alt="image" />', description: 'Web embed code' },
+  { id: 'bbcode', label: 'BBCode', format: '[img]{url}[/img]', description: 'For forums' },
+  { id: 'markdown-link', label: 'Markdown Link', format: '[image]({url})', description: 'Markdown link format' },
+  { id: 'html-link', label: 'HTML Link', format: '<a href="{url}" target="_blank"><img src="{url}" alt="image"></a>', description: 'Clickable HTML image' },
+  { id: 'reddit', label: 'Reddit', format: '{url}', description: 'Reddit image sharing' },
+  { id: 'discord', label: 'Discord', format: '{url}', description: 'Discord image sharing' },
+  { id: 'qrcode', label: 'QR Code', format: 'qr:{url}', description: 'QR code format' }
+] as const;
+
+// Batch export formats
+export const BATCH_EXPORT_FORMATS = [
+  { id: 'text', label: 'Plain Text List', extension: '.txt' },
+  { id: 'markdown', label: 'Markdown Format', extension: '.md' },
+  { id: 'html', label: 'HTML Format', extension: '.html' },
+  { id: 'json', label: 'JSON Format', extension: '.json' }
 ] as const;
 
 export const API_ENDPOINTS = {
