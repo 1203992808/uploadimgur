@@ -50,8 +50,46 @@ export default function Home() {
     // 定期检查存储使用情况
     const interval = setInterval(checkStorageUsage, 30000); // 每30秒检查一次
     
-    return () => clearInterval(interval);
-  }, [loadHistory]);
+    // 全局粘贴事件监听器
+    const handleGlobalPaste = async (e: ClipboardEvent) => {
+      // 检查是否在输入框中粘贴，如果是则忽略
+      if (e.target && (e.target as HTMLElement).tagName === 'INPUT' || (e.target as HTMLElement).tagName === 'TEXTAREA') {
+        return;
+      }
+
+      const items = Array.from(e.clipboardData?.items || []);
+      const imageItems = items.filter(item => item.type.startsWith('image/'));
+
+      if (imageItems.length > 0) {
+        e.preventDefault();
+        const files = imageItems.map(item => item.getAsFile()).filter(Boolean) as File[];
+        const validFiles = files.filter(file => 
+          file.type === 'image/jpeg' || 
+          file.type === 'image/png' || 
+          file.type === 'image/gif' || 
+          file.type === 'image/webp'
+        );
+
+        if (validFiles.length > 0) {
+          await addFiles(validFiles);
+          // 自动滚动到操作区域，居中显示
+          setTimeout(() => {
+            uploadControlsRef.current?.scrollIntoView({ 
+              behavior: 'smooth',
+              block: 'center'
+            });
+          }, 300);
+        }
+      }
+    };
+    
+    document.addEventListener('paste', handleGlobalPaste);
+    
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('paste', handleGlobalPaste);
+    };
+  }, [loadHistory, addFiles]);
 
   const handleHistoryToggle = () => {
     setShowHistory(!showHistory);
