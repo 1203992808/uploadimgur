@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { Copy, Download, FileText, Share2, Check, ChevronDown, ChevronUp, Link as LinkIcon } from 'lucide-react';
+import { Copy, Download, Check, ChevronDown, ChevronUp, Link as LinkIcon } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { LINK_FORMATS, BATCH_EXPORT_FORMATS } from '@/constants/upload';

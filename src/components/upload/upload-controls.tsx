@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { Copy, Download, Trash2, ChevronDown, ChevronUp, Check, Upload, Link as LinkIcon } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { LINK_FORMATS, BATCH_EXPORT_FORMATS } from '@/constants/upload';
 import { UploadFile } from '@/types/upload';

@@ -98,10 +98,10 @@ export class HistoryManager {
     }
   }
 
-  private static handleStorageError(error: any, history?: UploadHistory[]): void {
+  private static handleStorageError(error: unknown, history?: UploadHistory[]): void {
     console.error('Storage error:', error);
     
-    if (error.name === 'QuotaExceededError') {
+    if ((error as Error).name === 'QuotaExceededError') {
       console.warn('Storage quota exceeded, attempting to free up space...');
       
       if (history && history.length > 0) {
@@ -110,7 +110,7 @@ export class HistoryManager {
         try {
           localStorage.setItem(STORAGE_KEY, JSON.stringify(reducedHistory));
           console.log(`Reduced history from ${history.length} to ${reducedHistory.length} items`);
-        } catch (secondError) {
+        } catch {
           console.error('Failed to save reduced history, clearing all history');
           this.clearHistory();
         }
@@ -149,7 +149,7 @@ export class HistoryManager {
       const percentage = (used / MAX_STORAGE_SIZE) * 100;
       
       return { used, available, percentage };
-    } catch (error) {
+    } catch {
       return { used: 0, available: MAX_STORAGE_SIZE, percentage: 0 };
     }
   }

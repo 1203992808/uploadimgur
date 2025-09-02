@@ -88,10 +88,6 @@ export default function Home() {
     }, 300);
   };
 
-  const pendingCount = uploadFiles.filter(f => f.status === 'pending').length;
-  const successCount = uploadFiles.filter(f => f.status === 'success').length;
-  const errorCount = uploadFiles.filter(f => f.status === 'error').length;
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
       {/* Header */}
