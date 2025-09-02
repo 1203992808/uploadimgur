@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { Copy, Download, Trash2, ChevronDown, ChevronUp, Check, Upload, Link as LinkIcon } from 'lucide-react';
+import { Copy, Download, ChevronDown, ChevronUp, Check, Upload, Link as LinkIcon } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { LINK_FORMATS, BATCH_EXPORT_FORMATS } from '@/constants/upload';
@@ -12,7 +12,6 @@ interface UploadControlsProps {
   uploadFiles: UploadFile[];
   onUploadAll: () => void;
   onClearCompleted: () => void;
-  onClearAll: () => void;
   isUploading: boolean;
   className?: string;
 }
@@ -21,7 +20,6 @@ export function UploadControls({
   uploadFiles, 
   onUploadAll, 
   onClearCompleted, 
-  onClearAll, 
   isUploading, 
   className 
 }: UploadControlsProps) {

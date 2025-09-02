@@ -116,6 +116,7 @@ export function UploadItem({ uploadFile, onRemove, onRetry }: UploadItemProps) {
             <div className="flex-shrink-0">
               {uploadFile.preview && (
                 <div className="flex flex-col space-y-2">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={uploadFile.preview}
                     alt={uploadFile.file.name}
@@ -185,6 +186,7 @@ export function UploadItem({ uploadFile, onRemove, onRetry }: UploadItemProps) {
                   {/* Link Display */}
                   {selectedFormat === 'qrcode' ? (
                     <div className="flex flex-col items-center space-y-2">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={getLinkByFormat(selectedFormat)}
                         alt="QR Code"

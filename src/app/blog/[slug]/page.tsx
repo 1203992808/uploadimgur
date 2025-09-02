@@ -87,7 +87,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   // Convert markdown content to HTML (basic conversion for demonstration)
   const formatContent = (content: string) => {
     // Remove the first line if it's an h1 title (since we display the title separately)
-    let processedContent = content.replace(/^# .*$/m, '').trim();
+    const processedContent = content.replace(/^# .*$/m, '').trim();
     
     // Split content by lines for better processing
     const lines = processedContent.split('\n');

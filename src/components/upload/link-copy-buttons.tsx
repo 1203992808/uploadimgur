@@ -123,6 +123,7 @@ export function LinkCopyButtons({ url, filename = 'image', className, showPrevie
                   <div className="text-xs text-gray-600">代码:</div>
                   <code className="text-xs bg-white p-2 rounded border block">{getLinkByFormat(selectedFormat)}</code>
                   <div className="text-xs text-gray-600">渲染效果:</div>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={url} alt={filename} className="max-w-32 max-h-32 object-contain border rounded" />
                 </div>
               )}

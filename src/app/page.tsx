@@ -286,6 +286,7 @@ export default function Home() {
                         <div className="flex items-center justify-between">
                           <div className="flex items-center space-x-3">
                             {item.thumbnail && (
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
                               <img
                                 src={item.thumbnail}
                                 alt={item.filename}
