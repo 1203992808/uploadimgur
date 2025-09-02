@@ -64,7 +64,8 @@ export default function BlogPage() {
               </div>
             </Link>
             <Link href="/">
-              <Button variant="ghost" className="text-gray-600 hover:text-gray-900 hover:bg-gray-50/80 rounded-full">
+              <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold px-6 py-2 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-0">
+                <Upload className="w-4 h-4 mr-2" />
                 Upload Tool
               </Button>
             </Link>

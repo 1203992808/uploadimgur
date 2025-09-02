@@ -89,25 +89,71 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     // Remove the first line if it's an h1 title (since we display the title separately)
     let processedContent = content.replace(/^# .*$/m, '').trim();
     
-    processedContent = processedContent
-      .replace(/^# (.*$)/gm, '<h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 leading-tight">$1</h1>')
-      .replace(/^## (.*$)/gm, '<h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mt-12 mb-6 leading-tight">$1</h2>')
-      .replace(/^### (.*$)/gm, '<h3 class="text-xl sm:text-2xl font-bold text-gray-900 mt-8 mb-4 leading-tight">$1</h3>')
-      .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-blue-600">$1</strong>')
-      .replace(/^- (.*$)/gm, '<li class="mb-2 text-gray-700">$1</li>')
-      .replace(/^(.+)$/gm, (match, p1) => {
-        if (match.startsWith('<h') || match.startsWith('<li') || match.trim() === '') {
-          return match;
+    // Split content by lines for better processing
+    const lines = processedContent.split('\n');
+    const processedLines: string[] = [];
+    
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
+      
+      if (!line) {
+        processedLines.push('');
+        continue;
+      }
+      
+      // Handle images with captions
+      if (line.match(/!\[(.*?)\]\((.*?)\)/)) {
+        const imgMatch = line.match(/!\[(.*?)\]\((.*?)\)/);
+        if (imgMatch) {
+          processedLines.push(`<img src="${imgMatch[2]}" alt="${imgMatch[1]}" class="w-full max-w-4xl mx-auto rounded-2xl shadow-lg mb-4 border border-gray-200" />`);
+          // Check if next line is a caption (italic text)
+          if (i + 1 < lines.length && lines[i + 1].trim().match(/^\*([^*]+)\*$/)) {
+            const captionMatch = lines[i + 1].trim().match(/^\*([^*]+)\*$/);
+            if (captionMatch) {
+              processedLines.push(`<em class="italic text-gray-600 text-sm block text-center mb-8 -mt-2">${captionMatch[1]}</em>`);
+              i++; // Skip the caption line
+            }
+          }
         }
-        return `<p class="text-gray-700 leading-relaxed mb-6 text-lg">${p1}</p>`;
-      });
+        continue;
+      }
+      
+      // Handle headers
+      if (line.startsWith('### ')) {
+        processedLines.push(`<h3 class="text-xl sm:text-2xl font-bold text-gray-900 mt-8 mb-4 leading-tight">${line.substring(4)}</h3>`);
+        continue;
+      }
+      if (line.startsWith('## ')) {
+        processedLines.push(`<h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mt-12 mb-6 leading-tight">${line.substring(3)}</h2>`);
+        continue;
+      }
+      if (line.startsWith('# ')) {
+        processedLines.push(`<h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 leading-tight">${line.substring(2)}</h1>`);
+        continue;
+      }
+      
+      // Handle list items
+      if (line.startsWith('- ')) {
+        processedLines.push(`<li class="mb-2 text-gray-700">${line.substring(2).replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-blue-600">$1</strong>')}</li>`);
+        continue;
+      }
+      
+      // Handle regular paragraphs
+      if (line) {
+        const processedLine = line.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-blue-600">$1</strong>');
+        processedLines.push(`<p class="text-gray-700 leading-relaxed mb-6 text-lg">${processedLine}</p>`);
+      }
+    }
 
-    // Handle lists separately
-    processedContent = processedContent.replace(/(<li class="mb-2 text-gray-700">.*?<\/li>)(?:\s*<li class="mb-2 text-gray-700">.*?<\/li>)*/g, (match) => {
+    // Join lines and handle lists
+    let result = processedLines.join('\n');
+    
+    // Wrap consecutive list items in ul tags
+    result = result.replace(/(<li class="mb-2 text-gray-700">.*?<\/li>\s*)+/gs, (match) => {
       return `<ul class="list-disc list-inside space-y-2 mb-6 ml-4">${match}</ul>`;
     });
 
-    return processedContent;
+    return result;
   };
 
   return (
@@ -132,7 +178,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 </Button>
               </Link>
               <Link href="/">
-                <Button variant="ghost" className="text-gray-600 hover:text-gray-900 hover:bg-gray-50/80 rounded-full">
+                <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold px-6 py-2 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-0">
+                  <Upload className="w-4 h-4 mr-2" />
                   Upload Tool
                 </Button>
               </Link>
