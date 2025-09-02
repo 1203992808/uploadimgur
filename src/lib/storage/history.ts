@@ -38,12 +38,19 @@ export class HistoryManager {
       const history = this.getHistory();
       let newHistory = [simplifiedItem, ...history.slice(0, MAX_HISTORY_ITEMS - 1)];
       
-      // 检查存储大小
-      const dataString = JSON.stringify(newHistory);
+      // 检查存储大小并自动清理最老的记录
+      let dataString = JSON.stringify(newHistory);
       
-      // 如果数据太大，逐步减少历史记录
+      // 如果数据太大，自动删除最老的3个记录，直到大小合适
+      while (dataString.length > MAX_STORAGE_SIZE && newHistory.length > 3) {
+        newHistory = newHistory.slice(0, -3); // 删除最老的3个
+        dataString = JSON.stringify(newHistory);
+      }
+      
+      // 如果还是太大，继续删除直到只剩1个
       while (dataString.length > MAX_STORAGE_SIZE && newHistory.length > 1) {
-        newHistory = newHistory.slice(0, Math.floor(newHistory.length * 0.8));
+        newHistory = newHistory.slice(0, -1);
+        dataString = JSON.stringify(newHistory);
       }
       
       this.saveHistory(newHistory);
@@ -102,20 +109,19 @@ export class HistoryManager {
     console.error('Storage error:', error);
     
     if ((error as Error).name === 'QuotaExceededError') {
-      console.warn('Storage quota exceeded, attempting to free up space...');
-      
-      if (history && history.length > 0) {
-        // 尝试保存更少的记录
-        const reducedHistory = history.slice(0, Math.max(1, Math.floor(history.length * 0.5)));
+      // 自动清理，不提示用户
+      if (history && history.length > 3) {
+        // 自动删除最老的3个记录
+        const cleanedHistory = history.slice(0, -3);
         try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(reducedHistory));
-          console.log(`Reduced history from ${history.length} to ${reducedHistory.length} items`);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(cleanedHistory));
+          console.log(`Auto-cleaned history: removed 3 oldest items, ${cleanedHistory.length} items remaining`);
         } catch {
-          console.error('Failed to save reduced history, clearing all history');
-          this.clearHistory();
+          // 如果还是失败，继续删除更多记录
+          this.emergencyCleanup();
         }
       } else {
-        // 尝试清理其他可能的存储
+        // 如果记录太少，直接清空
         this.emergencyCleanup();
       }
     }
@@ -129,7 +135,7 @@ export class HistoryManager {
       // 可以在这里清除其他非关键的 localStorage 数据
       // 例如临时缓存等
       
-      console.log('Emergency cleanup completed');
+      console.log('Auto emergency cleanup completed - all history cleared');
     } catch (error) {
       console.error('Emergency cleanup failed:', error);
     }
