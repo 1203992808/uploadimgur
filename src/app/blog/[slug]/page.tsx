@@ -149,7 +149,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     let result = processedLines.join('\n');
     
     // Wrap consecutive list items in ul tags
-    result = result.replace(/(<li class="mb-2 text-gray-700">.*?<\/li>\s*)+/gs, (match) => {
+    result = result.replace(/(<li class="mb-2 text-gray-700">.*?<\/li>\s*)+/g, (match) => {
       return `<ul class="list-disc list-inside space-y-2 mb-6 ml-4">${match}</ul>`;
     });
 

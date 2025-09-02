@@ -22,7 +22,6 @@ export default function Home() {
     retryUpload,
     removeFile,
     clearCompleted,
-    clearAll,
     loadHistory,
     removeFromHistory,
     clearHistory
@@ -223,7 +222,6 @@ export default function Home() {
                 uploadFiles={uploadFiles}
                 onUploadAll={uploadAll}
                 onClearCompleted={clearCompleted}
-                onClearAll={clearAll}
                 isUploading={isUploading}
                 className="bg-white/80 backdrop-blur-sm border-gray-200 shadow-lg rounded-2xl"
               />
