@@ -126,43 +126,41 @@ export function UploadControls({
     <Card className={className}>
       <CardContent className="p-4 sm:p-6">
         {/* Main Controls Row */}
-        <div className="flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3">
           {/* Left side - File stats */}
-          <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-            <div className="flex items-center space-x-3">
-              <span className="text-sm font-semibold text-gray-800">
-                {uploadFiles.length} files
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <span className="text-sm font-semibold text-gray-800">
+              {uploadFiles.length} files
+            </span>
+            {pendingCount > 0 && (
+              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-700">
+                {pendingCount} pending
               </span>
-              {pendingCount > 0 && (
-                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-700">
-                  {pendingCount} pending
-                </span>
-              )}
-              {successCount > 0 && (
-                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
-                  {successCount} uploaded
-                </span>
-              )}
-              {errorCount > 0 && (
-                <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700">
-                  {errorCount} failed
-                </span>
-              )}
-            </div>
+            )}
+            {successCount > 0 && (
+              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                {successCount} uploaded
+              </span>
+            )}
+            {errorCount > 0 && (
+              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700">
+                {errorCount} failed
+              </span>
+            )}
           </div>
 
-          {/* Right side - Action buttons */}
-          <div className="flex items-center space-x-3">
+          {/* Center - Action buttons */}
+          <div className="flex items-center space-x-2 flex-1 justify-center">
             {/* Upload All Button */}
             {pendingCount > 0 && (
               <Button
                 onClick={onUploadAll}
                 disabled={isUploading}
-                className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-md hover:shadow-lg transition-all duration-200 rounded-lg px-4 py-2"
+                className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-md hover:shadow-lg transition-all duration-200 rounded-lg px-3 py-1.5"
                 size="sm"
               >
-                <Upload className="w-4 h-4 mr-2" />
-                Upload All ({pendingCount})
+                <Upload className="w-4 h-4 mr-1.5" />
+                <span className="text-xs">Upload All ({pendingCount})</span>
               </Button>
             )}
 
@@ -174,7 +172,7 @@ export function UploadControls({
                   <select
                     value={selectedFormat}
                     onChange={(e) => setSelectedFormat(e.target.value)}
-                    className="appearance-none bg-white border border-gray-200 hover:border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 rounded-lg px-3 py-2 pr-8 text-sm font-medium text-gray-700 transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md"
+                    className="appearance-none bg-white border border-gray-200 hover:border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 rounded-lg px-2.5 py-1.5 pr-6 text-xs font-medium text-gray-700 transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md"
                   >
                     {LINK_FORMATS.filter(f => f.id !== 'qrcode').map((format) => (
                       <option key={format.id} value={format.id}>
@@ -190,17 +188,17 @@ export function UploadControls({
                   variant="outline"
                   size="sm"
                   onClick={handleCopyAllLinks}
-                  className="border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-700 hover:text-gray-900 shadow-sm hover:shadow-md transition-all duration-200 rounded-lg px-4 py-2"
+                  className="border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-700 hover:text-gray-900 shadow-sm hover:shadow-md transition-all duration-200 rounded-lg px-3 py-1.5"
                 >
                   {copyStates['all-links'] ? (
                     <>
-                      <Check className="w-4 h-4 mr-2 text-green-600" />
-                      <span className="hidden sm:inline text-green-600">Copied!</span>
+                      <Check className="w-4 h-4 mr-1.5 text-green-600" />
+                      <span className="text-xs text-green-600">Copied!</span>
                     </>
                   ) : (
                     <>
-                      <Copy className="w-4 h-4 mr-2" />
-                      <span className="hidden sm:inline">Copy All</span>
+                      <Copy className="w-4 h-4 mr-1.5" />
+                      <span className="text-xs">Copy All</span>
                     </>
                   )}
                 </Button>
@@ -210,38 +208,28 @@ export function UploadControls({
                   variant="ghost"
                   size="sm"
                   onClick={() => setIsExpanded(!isExpanded)}
-                  className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200 rounded-lg px-3 py-2"
+                  className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200 rounded-lg px-2 py-1.5"
                 >
                   <LinkIcon className="w-4 h-4 mr-1" />
-                  <span className="hidden sm:inline">More</span>
+                  <span className="text-xs">More</span>
                   {isExpanded ? <ChevronUp className="w-3 h-3 ml-1" /> : <ChevronDown className="w-3 h-3 ml-1" />}
                 </Button>
               </>
             )}
+          </div>
 
-            {/* Clear buttons */}
-            <div className="flex items-center space-x-2 border-l border-gray-200 pl-3">
-              {successCount > 0 && (
-                <Button
-                  variant="ghost"
-                  onClick={onClearCompleted}
-                  className="text-gray-500 hover:text-gray-700 hover:bg-gray-50 transition-all duration-200 rounded-lg px-3 py-2"
-                  size="sm"
-                >
-                  <span className="hidden sm:inline text-xs">Clear Completed</span>
-                  <span className="sm:hidden text-xs">Clear</span>
-                </Button>
-              )}
-              
+          {/* Right side - Clear buttons */}
+          <div className="flex items-center flex-shrink-0">
+            {successCount > 0 && (
               <Button
-                variant="ghost"
-                onClick={onClearAll}
-                className="text-red-500 hover:text-red-700 hover:bg-red-50 transition-all duration-200 rounded-lg p-2"
+                variant="outline"
+                onClick={onClearCompleted}
+                className="border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-700 hover:text-gray-900 shadow-sm hover:shadow-md transition-all duration-200 rounded-lg px-3 py-1.5"
                 size="sm"
               >
-                <Trash2 className="w-4 h-4" />
+                <span className="text-xs">Clear Completed</span>
               </Button>
-            </div>
+            )}
           </div>
         </div>
 
