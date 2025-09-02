@@ -286,12 +286,14 @@ export default function Home() {
                         <div className="flex items-center justify-between">
                           <div className="flex items-center space-x-3">
                             {item.thumbnail && (
-                              {/* eslint-disable-next-line @next/next/no-img-element */}
-                              <img
-                                src={item.thumbnail}
-                                alt={item.filename}
-                                className="w-12 h-12 object-cover rounded-lg"
-                              />
+                              <>
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img
+                                  src={item.thumbnail}
+                                  alt={item.filename}
+                                  className="w-12 h-12 object-cover rounded-lg"
+                                />
+                              </>
                             )}
                             <div className="space-y-1">
                               <p className="font-medium text-gray-900">{item.filename}</p>
